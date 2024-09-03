@@ -1,22 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-// Example of a data array that
-// you might receive from an API
-const data = [
-    { id: 1, name: "Asus Laptop", brand: "Asus", category: "Accessories", price: 20, description: "Asus Description", img: "backend_Engineer.png" },
-    { id: 2, name: "Asus Laptop", brand: "Asus", category: "Accessories", price: 20, description: "Asus Description", img: "backend_Engineer.png" },
-    { id: 3, name: "Asus Laptop", brand: "Asus", category: "Accessories", price: 20, description: "Asus Description", img: "backend_Engineer.png" },
-    { id: 4, name: "Asus Laptop", brand: "Asus", category: "Accessories", price: 20, description: "Asus Description", img: "backend_Engineer.png" },
-    { id: 5, name: "Asus Laptop", brand: "Asus", category: "Accessories", price: 20, description: "Asus Description", img: "backend_Engineer.png" },
-
-]
 
 function ProductList() {
+    const [product, setProduct] = useState(null);
+
+    useEffect(() => {
+        fetch("http://localhost:3001/api/products")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error();
+            }).then((data) => {
+                console.log(data)
+                setProduct(data);
+            }).catch((err) => {
+                alert(`unable to get data err:`)
+            })
+    }, [])
+
+    function deleteProduct(_id) {
+        fetch("http://localhost:3001/api/products/" + _id, {
+            method: "DELETE"
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error();
+            }).then((data) => {
+                console.log(data)
+                alert("Data Deleted Successfully")
+            }).catch((err) => {
+                console.log(err)
+                alert(`unable to delete a Product:`)
+            })
+    }
+
     return (
         <div className='container'>
             <div className="btn-list">
                 <Link to="/products/page">Create Product</Link>
-                <Link to="product">Refresh</Link>
+                <Link to="/products">Refresh</Link>
             </div>
 
             <div className="table-container">
@@ -33,17 +58,19 @@ function ProductList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((val, key) => (
-                            <tr key={key}>
-                                <td>{val.name}</td>
-                                <td>{val.brand}</td>
-                                <td>{val.category}</td>
-                                <td>{val.price}</td>
-                                <td>{val.description}</td>
-                                <td><img src={`/${val.img}`} style={{ "width": "50px" }} /></td >
-                                <td className='action-btn'><Link to={`/update/${val.id}`}>Edit</Link> <Link onClick={() => deleteProduct(val.id)}>Delete</Link></td>
-                            </tr>
-                        ))}
+                        {product ? (product.data.map((val, key) => {
+                            return (
+                                <tr key={key}>
+                                    <td>{val.name}</td>
+                                    <td>{val.brand}</td>
+                                    <td>{val.category}</td>
+                                    <td>{val.price}</td>
+                                    <td>{val.description}</td>
+                                    <td><img src={"http://localhost:3001/uploads/" + val.img} style={{ "width": "50px" }} /></td >
+                                    <td className='action-btn'><Link to={`/update/${val._id}`}>Edit</Link> <Link onClick={() => deleteProduct(val._id)}>Delete</Link></td>
+                                </tr>
+                            )
+                        })) : null}
                     </tbody>
                 </table>
             </div>

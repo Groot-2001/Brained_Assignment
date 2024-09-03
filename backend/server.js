@@ -1,5 +1,7 @@
 const express = require("express");
 const helmet = require("helmet");
+const morgan = require("morgan");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const productRoute = require("./api/product_api.js");
 require("dotenv").config();
@@ -10,6 +12,8 @@ const app = express();
 
 //setting up with Port
 const PORT = process.env.PORT || 3001;
+
+app.use(morgan("tiny"));
 
 //Setting up with helmet
 app.use(helmet.hidePoweredBy());
@@ -22,16 +26,15 @@ app.use(helmet.ieNoOpen());
 dbconn();
 
 // parse application/json
-app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.json());
 
 // parse application/x-www-form-urlencoded
-app.use(
-  bodyParser.urlencoded({
-    limit: "10mb",
-    extended: true,
-    parameterLimit: 50000,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cors());
+
+//exposing the /uploads route for frontend image fetching.
+app.use("/uploads", express.static("uploads"));
 
 // handling cors errors
 app.use((req, res, next) => {
@@ -61,7 +64,9 @@ app.use("*", (req, res, next) => {
 app.use((err, req, res, next) => {
   if (err) {
     console.error(err.type);
-    res.status(400).json({ error: "error parsing data" });
+    res
+      .status(400)
+      .json({ error: "error parsing data", err });
   } else {
     next();
   }

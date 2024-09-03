@@ -1,18 +1,18 @@
 const productModel = require("../model/product");
 
 const createProduct = async (req, res) => {
-  //getting the text from user
-  const { name, brand, category, price, description, img } =
-    req.body;
-
   //validating the text data
+
+  console.log("body:", req.body);
+  console.log("file:", req.file);
+
   if (
-    !name ||
-    !brand ||
-    !category ||
-    !price ||
-    !description ||
-    !img
+    !req.body.name ||
+    !req.body.brand ||
+    !req.body.category ||
+    !req.body.price ||
+    !req.body.description ||
+    !req.file.filename
   ) {
     return res.status(401).json({
       message: "please fill the required field",
@@ -20,18 +20,18 @@ const createProduct = async (req, res) => {
   }
   try {
     //creating and saving the new paste in the db.
-    const paste = await productModel.create({
-      name,
-      brand,
-      category,
-      price,
-      description,
-      img,
+    const product_data = await productModel.create({
+      name: req.body.name,
+      brand: req.body.brand,
+      category: req.body.category,
+      price: req.body.price,
+      description: req.body.description,
+      img: req.file.filename,
     });
 
     return res.status(201).json({
       message: "Product saved successfully in database!",
-      paste,
+      data: product_data,
     });
   } catch (error) {
     console.error(error.message);
@@ -44,15 +44,16 @@ const createProduct = async (req, res) => {
 const getProduct = async (req, res) => {
   const id = req.params._id.toString();
   try {
-    const product_data = await productModel.find({
-      _id: id,
-    });
+    const product_data = await productModel.findById(id);
+
     if (!product_data) {
       return res.status(400).json({
         message: "product not found",
       });
     }
-    return product_data;
+    return res.status(200).json({
+      data: product_data,
+    });
   } catch (error) {
     console.error(error.message);
     return res.status(500).json({
@@ -60,12 +61,33 @@ const getProduct = async (req, res) => {
     });
   }
 };
+
+const getAllProduct = async (req, res) => {
+  try {
+    const product_data = await productModel.find({});
+
+    if (!product_data) {
+      return res.status(400).json({
+        message: "product not found",
+      });
+    }
+    return res.status(200).json({
+      data: product_data,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
 const updateProduct = async (req, res) => {
   const id = req.params._id.toString();
   const { name, brand, category, price, description, img } =
     req.body;
   try {
-    const product_data = await productModel.find({
+    const product_data = await productModel.findById({
       _id: id,
     });
     if (!product_data) {
@@ -73,7 +95,7 @@ const updateProduct = async (req, res) => {
         message: "product not found",
       });
     }
-    const updated_data = await productModel.update({
+    const updated_data = await productModel.updateOne({
       name,
       brand,
       category,
@@ -81,6 +103,8 @@ const updateProduct = async (req, res) => {
       description,
       img,
     });
+
+    console.log(updated_data);
 
     return res.status(200).json({
       data: updated_data,
@@ -131,6 +155,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   createProduct,
+  getAllProduct,
   getProduct,
   updateProduct,
   deleteProduct,

@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import './App.css'
 import ProductList from './components/ProductList';
 import Products from './components/Products';
 import Update from './components/Update';
