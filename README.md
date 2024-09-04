@@ -2,6 +2,9 @@
 
 [Watch Demo](https://github.com/Groot-2001/Brained_Assignment/blob/main/project_demo.mp4)
 
+
+<video src="https://github.com/Groot-2001/Brained_Assignment/blob/main/project_demo.mp4"></video>
+
 # Installation
 
 ### For frontend
