@@ -26,3 +26,5 @@
 ```env
     DATABASE_URI = "Add your database uri"
 ```
+
+2. create a folder named uploads in backend.
