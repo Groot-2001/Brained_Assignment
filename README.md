@@ -12,6 +12,7 @@
 ```
     git clone https://github.com/Groot-2001/Brained_Assignment.git
     cd frontend
+    npm install
     npm run dev
 ```
 
@@ -19,6 +20,7 @@
 
 ```
     cd backend
+    npm install
     npm run server
 ```
 
