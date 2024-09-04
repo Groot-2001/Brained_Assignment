@@ -1,6 +1,6 @@
 # Project Demo
 
-[![Video Title](https://github.com/Groot-2001/Brained_Assignment.git)](https://www.youtube.com/watch?v=VIDEO_ID)
+[Watch Demo](https://github.com/Groot-2001/Brained_Assignment/blob/main/project_demo.mp4)
 
 # Installation
 
