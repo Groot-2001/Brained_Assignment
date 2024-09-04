@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ProductList() {
     const [product, setProduct] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         fetch("http://localhost:3001/api/products")
             .then((response) => {
@@ -24,13 +24,11 @@ function ProductList() {
             method: "DELETE"
         })
             .then((response) => {
-                if (response.ok) {
-                    return response.json();
+                if (!response.ok) {
+                    throw new Error();
                 }
-                throw new Error();
-            }).then((data) => {
-                console.log(data)
                 alert("Data Deleted Successfully")
+                navigate("/products")
             }).catch((err) => {
                 console.log(err)
                 alert(`unable to delete a Product:`)

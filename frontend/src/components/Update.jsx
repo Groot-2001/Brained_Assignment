@@ -28,25 +28,27 @@ function Update() {
         const formData = new FormData(e.target);
         const product = Object.fromEntries(formData.entries())
 
+        const options = {
+            method: 'PUT',
+            body: formData
+        };
+
         try {
-            const res = await fetch("http://localhost:3001/api/products/" + params.id, {
-                method: 'PUT',
-                body: product
-            });
+            const res = await fetch("http://localhost:3001/api/products/" + params.id, options);
 
             const content = await res.json();
 
             if (res.ok) {
-                console.log(content)
+                console.log('Data updated:', content);
                 alert("Product Updated successfully")
                 navigate("/products")
             } else {
                 alert("unable to Update product")
+                throw new Error(`HTTP error ${res.status}`);
             }
 
         } catch (error) {
-            console.log(error)
-            alert("an error has occured")
+            console.error('Error updating data:', error);
         }
     }
 
@@ -71,7 +73,7 @@ function Update() {
                     <label htmlFor="file-upload" className="custom-file-upload">
                         Select Image
                     </label>
-                    <input id="file-upload" type="file" name="img" />
+                    <input id="file-upload" type="file" name="img" defaultValue={initial.data.img.name} />
                     <div className='btn-group'>
                         <button type="submit">Submit</button>
                         <Link className='link' to={"/"}>Cancel</Link>

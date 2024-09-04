@@ -86,10 +86,15 @@ const updateProduct = async (req, res) => {
   const id = req.params._id.toString();
   const { name, brand, category, price, description, img } =
     req.body;
+
+  console.log("body:", req.body);
+  console.log("file:", req.file);
+
   try {
     const product_data = await productModel.findById({
       _id: id,
     });
+
     if (!product_data) {
       return res.status(400).json({
         message: "product not found",
@@ -101,10 +106,8 @@ const updateProduct = async (req, res) => {
       category,
       price,
       description,
-      img,
+      img: req.file.filename,
     });
-
-    console.log(updated_data);
 
     return res.status(200).json({
       data: updated_data,

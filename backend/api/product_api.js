@@ -28,7 +28,11 @@ productRoute.post(
   upload.single("img"),
   createProduct
 );
-productRoute.put("/products/:_id", updateProduct);
+productRoute.put(
+  "/products/:_id",
+  upload.single("img"),
+  updateProduct
+);
 productRoute.delete("/products/:_id", deleteProduct);
 
 module.exports = productRoute;
